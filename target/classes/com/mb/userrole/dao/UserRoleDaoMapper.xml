@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.userrole.dao.UserRoleDao">
+
+	<resultMap id="resultMap" type="com.mb.userrole.entity.UserRole">
+		<id property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="userId" column="USERID" jdbcType="VARCHAR" />
+		<result property="roleId" column="ROLEID" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 根据用户id查询对应角色 -->
+	<select id="selectUserRoleListByUserId" resultMap="resultMap" parameterType="java.lang.String">
+		select 
+		<include refid="base_column_list" /> 
+		from base_user_role 
+		where userId = #{userId}
+	</select>
+	
+	<sql id="base_column_list" >
+       	 id, 
+       	 userId, 
+       	 roleId
+ 	 </sql>
+ 	 
+ 	 <sql id="base_select_where" >
+		<where>
+			<if test="id != null and id != '' ">
+	          and ID = #{id}
+	        </if>
+	        <if test="userId != null and userId != '' ">
+	          and USERID = #{userId}
+	        </if>
+	        <if test="roleId != null and roleId != '' ">
+	          and ROLEID = #{roleId}
+	        </if>
+		</where>
+	</sql>
+	
+</mapper>

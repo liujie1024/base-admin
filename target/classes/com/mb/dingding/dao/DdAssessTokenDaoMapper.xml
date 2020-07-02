@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.dingding.dao.DdAssessTokenDao">
+
+	<resultMap id="resultMap" type="com.mb.dingding.entity.DdAccessToken">
+		<result property="appKey" column="APPKEY" jdbcType="VARCHAR" />
+		<result property="beginTime" column="BEGINTIME" jdbcType="TIMESTAMP" />
+		<result property="assessToken" column="ASSESSTOKEN" jdbcType="VARCHAR" />
+		<result property="extend1" column="EXTEND1" jdbcType="VARCHAR" />
+		<result property="extend2" column="EXTEND2" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 数据保存 -->
+	<insert id="save" parameterType="java.util.Map">
+		INSERT INTO dd_assesstoken
+			(APPKEY, BEGINTIME, ASSESSTOKEN, EXTEND1, EXTEND2)
+		VALUES
+		(
+			#{appKey, jdbcType=VARCHAR},
+			#{beginTime, jdbcType=TIMESTAMP},
+			#{assessToken, jdbcType=VARCHAR},
+			#{extend1, jdbcType=VARCHAR},
+			#{extend2, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 数据更新 -->
+	<update id="update" parameterType="com.mb.menu.entity.Menu">
+		UPDATE dd_assesstoken
+		<set>
+			<if test="beginTime != null and beginTime != '' ">
+				BEGINTIME = #{beginTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="assessToken != null and assessToken != '' ">
+				ASSESSTOKEN = #{assessToken, jdbcType=VARCHAR},
+			</if>
+			<if test="extend1 != null and extend1 != '' ">
+				EXTEND1 = #{extend1, jdbcType=VARCHAR},
+			</if>
+			<if test="extend2 != null and extend2 != '' ">
+				EXTEND2 = #{extend2, jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE APPKEY = #{appKey}
+	</update>
+
+</mapper>

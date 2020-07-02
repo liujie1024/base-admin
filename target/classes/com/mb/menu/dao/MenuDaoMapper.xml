@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.menu.dao.MenuDao">
+
+	<resultMap id="resultMap" type="com.mb.menu.entity.Menu">
+		<id property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="menunama" column="MENUNAMA" jdbcType="VARCHAR" />
+		<result property="menuurl" column="MENUURL" jdbcType="VARCHAR" />
+		<result property="parentId" column="PARENTID" jdbcType="VARCHAR" />
+		<result property="createTime" column="CREATETIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATETIME" jdbcType="TIMESTAMP" />
+		<result property="createUser" column="CREATEUSER" jdbcType="VARCHAR" />
+		<result property="grade" column="GRADE" jdbcType="VARCHAR" />
+		<result property="auth" column="AUTH" jdbcType="VARCHAR" />
+		<result property="extend1" column="EXTEND1" jdbcType="VARCHAR" />
+		<result property="extend2" column="EXTEND2" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="save" parameterType="java.util.Map">
+		INSERT INTO base_menu 
+			(id, menunama, menuurl, parentId, createTime, updateTime, createUser, grade, auth, extend1, extend2) 
+		VALUES 
+			(#{id,jdbcType=VARCHAR}, 
+			#{menunama,jdbcType=VARCHAR},
+			#{menuurl,jdbcType=VARCHAR},
+			#{parentId,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{updateTime,jdbcType=TIMESTAMP}, 
+			#{createUser,jdbcType=VARCHAR}, 
+			#{grade,jdbcType=VARCHAR}, 
+			#{auth,jdbcType=VARCHAR}, 
+			#{extend1,jdbcType=VARCHAR}, 
+			#{extend2,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterType="com.mb.menu.entity.Menu">
+	    UPDATE base_menu
+	    <set>
+	    	<if test="menunama!=null and menunama!='' ">
+	            menunama = #{menunama,jdbcType=VARCHAR},
+	        </if>
+	        <if test="menuurl!=null and menuurl!='' ">
+	            menuurl = #{menuurl,jdbcType=VARCHAR},
+	        </if>
+	        <if test="parentId!=null and parentId!='' ">
+	            parentId = #{parentId,jdbcType=VARCHAR},
+	        </if>
+	        <if test="createTime!=null">
+	            createTime = #{createTime,jdbcType=TIMESTAMP},
+	        </if>
+	        <if test="updateTime!=null">
+	            updateTime = #{updateTime,jdbcType=TIMESTAMP},
+	        </if>
+	        <if test="createUser!=null and createUser!='' ">
+	            createUser = #{createUser,jdbcType=VARCHAR}
+	        </if>
+	        <if test="grade!=null and grade!='' ">
+	            grade = #{grade,jdbcType=VARCHAR}
+	        </if>
+	        <if test="auth!=null and auth!='' ">
+	            auth = #{auth,jdbcType=VARCHAR}
+	        </if>
+	        <if test="extend1!=null and extend1!='' ">
+	            extend1 = #{extend1,jdbcType=VARCHAR}
+	        </if>
+	        <if test="extend2!=null and extend2!='' ">
+	            extend2 = #{extend2,jdbcType=VARCHAR}
+	        </if>
+	    </set>
+	    WHERE id = #{id} 
+	</update>
+	
+	<!-- 根据id删除数据 -->
+	<delete id="deleteById"  parameterType="java.lang.String">
+	   delete from base_menu where id = #{id} 
+	</delete>
+	
+	<!-- 根据参数查询用户 -->
+	<select id="getListByParam" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT 
+		<include refid="base_column_list" />
+		FROM base_menu 
+		<include refid="base_select_where" />
+	</select>
+
+	<!-- 根据角色id查询对应的菜单 -->
+	<select id="getMenuListByRoleId" parameterType="java.lang.String" resultType="com.mb.menu.entity.Menu">
+		select 
+		<include refid="base_column_list" /> 
+ 		from base_menu where id in (select menuId from base_role_menu where roleId=#{roleId })
+	</select>
+	
+	<!-- 根据父菜单查询下面子菜单 -->
+	<select id="getMenuListByParentId" parameterType="java.lang.String" resultType="com.mb.menu.entity.Menu">
+		select 
+		<include refid="base_column_list" /> 
+ 		from base_menu where parentId=#{parentId }
+	</select>
+	
+	<!-- 根据父菜单查询下面子菜单 -->
+	<select id="getParentMenuList" parameterType="java.util.Map" resultType="com.mb.menu.entity.Menu">
+		select 
+		<include refid="base_column_list" /> 
+		from base_menu where parentId is null or parentId='' 
+	</select>
+	
+	<!-- 查询所有的菜单 -->
+	<select id="getAllMenuList" parameterType="java.util.Map" resultType="com.mb.menu.entity.Menu">
+		select 
+		<include refid="base_column_list" /> 
+ 		from base_menu 
+	</select>
+	
+	<sql id="base_column_list" >
+       	 id, 
+       	 menunama, 
+       	 menuurl, 
+       	 parentId, 
+       	 createTime,
+       	 updateTime,
+       	 createUser,
+       	 grade, 
+       	 auth, 
+       	 extend1, 
+       	 extend2
+ 	 </sql>
+ 	 
+ 	 <sql id="base_select_where" >
+		<where>
+			<if test="id != null and id != '' ">
+	          and ID = #{id}
+	        </if>
+		    <if test="menunama != null and menunama != '' ">
+	          and MENUNAMA = #{menunama}
+	        </if>
+	        <if test="menuurl != null and menuurl != '' ">
+	          and MENUURL = #{menuurl}
+	        </if>
+	        <if test="parentId != null and parentId != '' ">
+	          and PARENTID = #{parentId}
+	        </if>
+	        <if test="createTime != null and createTime != '' ">
+	          and CREATETIME = #{createTime}
+	        </if>
+	        <if test="updateTime != null and updateTime != '' ">
+	          and UPDATETIME = #{updateTime}
+	        </if>
+	        <if test="createUser != null and createUser != '' ">
+	          and CREATEUSER = #{createUser}
+	        </if>
+	        <if test="grade != null and grade != '' ">
+	          and GRADE = #{grade}
+	        </if>
+	        <if test="auth != null and auth != '' ">
+	          and AUTH = #{auth}
+	        </if>
+	        <if test="extend1 != null and extend1 != '' ">
+	          and EXTEND1 = #{extend1}
+	        </if>
+	        <if test="extend2 != null and extend2 != '' ">
+	          and EXTEND2 = #{extend2}
+	        </if>
+		</where>
+	</sql>
+	
+</mapper>

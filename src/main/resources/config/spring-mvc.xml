@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 注解扫描包 -->
+	<context:component-scan base-package="com.mb" />
+	
+	<!-- 设置使用注解的类所在的jar包，SwaggerConfig在的包路径 -->  
+	<context:component-scan base-package="com.mb.swagger" />
+	
+	<!-- 使用 Swagger Restful API文档时，添加此注解 -->  
+    <mvc:default-servlet-handler />
+
+	<!-- 开启注解 -->
+	<mvc:annotation-driven />
+
+	<!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->
+	<mvc:resources mapping="/image/**" location="/image/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/html/**" location="/html/" />
+	<mvc:resources mapping="/common/**" location="/common/" />
+	
+	<!-- 所有swagger目录的访问，直接访问location指定的目录 -->
+	<mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>  
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/> 
+	
+	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 文件上传处理 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置允许上传的最大文件大小，以字节为单位计算。当设为-1时表示无限制，默认是-1，现在设置为100M -->
+		<property name="maxUploadSize">
+			<value>104857600</value>
+		</property>
+		<!-- 设置在文件上传时允许写到内存中的最大值，以字节为单位计算，2M -->
+		<property name="maxInMemorySize">
+			<value>2097152</value>
+		</property>
+	</bean>
+	
+	<!-- 全局异常处理 -->
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<!-- 定义默认的异常处理页面，当该异常类型的注册时使用 -->
+		<property name="defaultErrorView" value="error"></property>
+		<!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+		<property name="exceptionAttribute" value="ex"></property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 需拦截的地址 -->
+			<!-- 一级目录 -->
+			<mvc:mapping path="/*.do" />
+			<mvc:mapping path="/*.ajax" />
+			<mvc:mapping path="/*.htm" />
+
+			<!-- 二级目录 -->
+			<mvc:mapping path="/*/*.do" />
+			<mvc:mapping path="/*/*.ajax" />
+			<mvc:mapping path="/*/*.htm" />
+			<!-- 需排除拦截的地址 -->
+			<mvc:exclude-mapping path="/login.jsp" />
+			<mvc:exclude-mapping path="/login/login.do"/> 
+			<mvc:exclude-mapping path="/login/sessionTime.do"/>
+			<bean class="com.mb.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 因为spring容器里没有SpringSwaggerConfig类型的对象。解决办法：在springmvc的配置文件中加入以下配置即可 -->
+	<!-- <bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" /> -->
+
+</beans>

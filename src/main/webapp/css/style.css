@@ -1,0 +1,124 @@
+@CHARSET "UTF-8";
+
+/************************************************ 公共标签样式 ************************************************/
+html, body {
+    font-family: "微软雅黑", "Lucida Sans Unicode", "Lucida Grande", Arial,
+    Verdana, sans-serif;
+    background-color: #FFFFFF;
+    line-height: 18px;
+    font-size: 12px;
+    overflow: auto;
+    color: #343434;
+}
+
+/************************************************ 公共标签样式 ************************************************/
+.menu1 {
+    border: 1px solid #CCCCCC;
+    overflow: hidden;
+}
+
+.menu1 ul {
+    margin: 0px;
+    list-style: none;
+    padding: 0px;
+}
+
+.menu1 ul li {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: #FFFFFF;
+    margin-right: 2px;
+    border-bottom: 1px solid #C3DEB7;
+}
+
+.menu1 ul li a {
+    display: block;
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 30px;
+    width: 170px;
+    color: #000000;
+}
+
+.menu1 ul li a:hover {
+    background: #c0c0c0;
+    color: #FFFFFF;
+}
+
+.formTable {
+    font-size: 12px;
+}
+
+/****【UI按钮标签ace样式】列表后面的操作按钮支持按钮标签样式设置************************************************/
+a[class="ace_button"]:hover {
+    color: #DDDDDD !important;
+    text-decoration: none;
+}
+
+.ace_button {
+    background-color: seagreen;
+    border-color: seagreen;
+    color: #FFFFFF;
+    border-radius: 3px;
+    padding: 1px 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/************************************************ a标签样式 ************************************************/
+
+/************************************************ 表格样式 ************************************************/
+table.errorShow {
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 100%;
+}
+
+table.errorShow th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #dedede;
+}
+
+table.errorShow td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #ffffff;
+}
+
+table.errorShow #tdsty {
+    background: #EBECF0;
+}
+
+/************************************************ 表格样式 ************************************************/
+
+fieldset {
+    padding: 10px;
+    margin: 10px;
+    width: 92%;
+    color: #333;
+    border: #06c dashed 1px;
+}
+
+fieldset legend {
+    color: sienna;
+    font-weight: 800;
+    background: #fff;
+    border: #b6b6b6 solid 1px;
+    padding: 3px 6px;
+}
+
+

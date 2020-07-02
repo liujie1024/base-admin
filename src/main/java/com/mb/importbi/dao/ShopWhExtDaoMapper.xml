@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.importbi.dao.ShopWhExtDao">
+
+	<resultMap id="resultMap" type="com.mb.importbi.entity.ShopWhExt">
+		<result property="shop_id" column="SHOP_ID" jdbcType="VARCHAR" />
+		<result property="mrkt_cd" column="MRKT_CD" jdbcType="VARCHAR" />
+		<result property="mb_dist_name" column="MB_DIST_NAME" jdbcType="VARCHAR" />
+		<result property="manage_unit_name" column="MANAGE_UNIT_NAME" jdbcType="VARCHAR" />
+		<result property="shop_brand_name" column="SHOP_BRAND_NAME" jdbcType="VARCHAR" />
+		<result property="shop_class_name" column="SHOP_CLASS_NAME" jdbcType="VARCHAR" />
+		<result property="shop_name" column="SHOP_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 根据门店ID查询 -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.mb.importbi.entity.ShopWhExt">
+		SELECT * FROM MFP_SHOP_ALL WHERE SHOP_ID=#{id }
+	</select>
+	
+	<!-- 根据市场ID查询数据 -->
+	<select id="getShopWhExtByMrktcd" parameterType="java.lang.String" resultMap="resultMap">
+		SELECT * FROM MFP_SHOP_ALL WHERE MRKT_CD=#{mrkt_cd }
+	</select>
+	
+</mapper>

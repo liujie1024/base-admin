@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.importbi.dao.ImportFranchiseBiDao">
+
+	<resultMap id="resultMap" type="com.mb.importbi.entity.ImportFranchiseBi">
+		<result property="clndr_wk_cd" column="CLNDR_WK_CD" jdbcType="NUMERIC" />
+		<result property="mrkt_cd" column="MRKT_CD" jdbcType="VARCHAR" />
+		<result property="item_cd_6bit" column="ITEM_CD_6BIT" jdbcType="VARCHAR" />
+		<result property="item_cd_8bit" column="ITEM_CD_8BIT" jdbcType="VARCHAR" />
+		<result property="is_sale_unsalable" column="IS_SALE_UNSALABLE" jdbcType="VARCHAR" />
+		<result property="load_dt" column="LOAD_DT" jdbcType="TIMESTAMP" />
+		<result property="target_unit_cnt" column="TARGET_UNIT_CNT" jdbcType="NUMERIC" />
+		<result property="target_unit_amt" column="TARGET_UNIT_AMT" jdbcType="NUMERIC" />
+		<result property="suggest_disc" column="SUGGEST_DISC" jdbcType="NUMERIC" />
+		<result property="sku_cnt" column="SKU_CNT" jdbcType="NUMERIC" />
+		<result property="plan_unit_cnt" column="PLAN_UNIT_CNT" jdbcType="NUMERIC" />
+		<result property="target_gm_amt" column="TARGET_GM_AMT" jdbcType="NUMERIC" />
+		<result property="rest_life" column="REST_LIFE" jdbcType="NUMERIC" />
+		<result property="mb_dist_name" column="MB_DIST_NAME" jdbcType="VARCHAR" />
+		<result property="manage_unit_name" column="MANAGE_UNIT_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 加盟，批量插入数据 oracle写法 -->
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO MFP_SHOP_SALE_UNSALABLE_MRKT (CLNDR_WK_CD, MRKT_CD, ITEM_CD_8BIT, 
+			  	IS_SALE_UNSALABLE, TARGET_UNIT_CNT, SUGGEST_DISC, 
+			  	MB_DIST_NAME, MANAGE_UNIT_NAME) 
+		(
+		<foreach collection="importFranchiseBiList" index="" item="importFranchiseBi" separator="union all">
+			select
+			   #{importFranchiseBi.clndr_wk_cd,jdbcType=NUMERIC },#{importFranchiseBi.mrkt_cd,jdbcType=VARCHAR },
+			   #{importFranchiseBi.item_cd_8bit,jdbcType=VARCHAR },#{importFranchiseBi.is_sale_unsalable,jdbcType=VARCHAR },
+			   #{importFranchiseBi.target_unit_cnt,jdbcType=NUMERIC },#{importFranchiseBi.suggest_disc,jdbcType=NUMERIC },
+			   (SELECT MB_DIST_NAME FROM MFP_SHOP_ALL WHERE MRKT_CD=#{importFranchiseBi.mrkt_cd,jdbcType=VARCHAR } AND ROWNUM=1),
+			   (SELECT MANAGE_UNIT_NAME FROM MFP_SHOP_ALL WHERE MRKT_CD=#{importFranchiseBi.mrkt_cd,jdbcType=VARCHAR } AND ROWNUM=1)
+			from dual
+		</foreach>
+		)
+	</insert>
+	
+	<!-- 通过主键集合批量删除记录 -->
+	<delete id="deleteByMap" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_MRKT WHERE MRKT_CD=#{mrkt_cd } AND ITEM_CD_8BIT=#{item_cd_8bit } AND IS_SALE_UNSALABLE=#{is_sale_unsalable }
+	</delete>
+	
+	<!-- 批量删除记录 -->
+	<delete id="deleteBatchByMap2" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_MRKT A
+		WHERE EXISTS
+		(
+		select 1 from(
+		<foreach collection="deleteFranchiseBiList" item="importFranchiseBi" index="index" separator="union all">
+			select B.* from MFP_SHOP_SALE_UNSALABLE_MRKT B where 1=1 
+			AND B.MRKT_CD=#{importFranchiseBi.mrkt_cd } 
+			AND B.ITEM_CD_8BIT=#{importFranchiseBi.item_cd_8bit } 
+			AND B.IS_SALE_UNSALABLE=#{importFranchiseBi.is_sale_unsalable }
+		</foreach>
+		) S 
+		WHERE A.MRKT_CD=S.MRKT_CD AND A.ITEM_CD_8BIT=S.ITEM_CD_8BIT AND A.IS_SALE_UNSALABLE=S.IS_SALE_UNSALABLE
+		)
+	</delete>
+	
+	<!-- 批量删除记录 -->
+	<delete id="deleteBatchByMap" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_MRKT 
+		<where>
+			<foreach collection="deleteFranchiseBiList" index="index" item="importFranchiseBi" open="(" separator="or" close=")">
+				MRKT_CD=#{importFranchiseBi.mrkt_cd } 
+				AND ITEM_CD_8BIT=#{importFranchiseBi.item_cd_8bit } 
+				AND IS_SALE_UNSALABLE=#{importFranchiseBi.is_sale_unsalable }
+			</foreach>
+		</where>
+	</delete>
+	
+	<!-- 根据参数查询数据 -->
+	<select id="getListByParam" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT * FROM MFP_SHOP_SALE_UNSALABLE_MRKT 
+		<include refid="base_select_where" />
+	</select>
+	
+	<sql id="base_select_where">
+		<where>
+	        <if test="mrkt_cd != null and mrkt_cd != '' ">
+	          and MRKT_CD = #{mrkt_cd }
+	        </if>
+	        <if test="item_cd_8bit != null and item_cd_8bit != '' ">
+	          and ITEM_CD_8BIT = #{item_cd_8bit }
+	        </if>
+	        <if test="is_sale_unsalable != null and is_sale_unsalable != '' ">
+	          and IS_SALE_UNSALABLE = #{is_sale_unsalable }
+	        </if>
+		</where>
+	</sql>
+	
+</mapper>

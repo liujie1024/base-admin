@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.broadcast.dao.BroadcastDao">
+
+    <resultMap id="resultMap" type="com.mb.broadcast.entity.BroadcastEntity">
+        <id property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="progress" column="PROGRESS" jdbcType="VARCHAR"/>
+        <result property="region" column="REGION" jdbcType="VARCHAR"/>
+        <result property="company" column="COMPANY" jdbcType="VARCHAR"/>
+        <result property="broadcastPlatform" column="BROADCAST_PLATFORM" jdbcType="VARCHAR"/>
+        <result property="broadcastOnlineshop" column="BROADCAST_ONLINESHOP" jdbcType="VARCHAR"/>
+        <result property="broadcastDate" column="BROADCAST_DATE" jdbcType="TIMESTAMP"/>
+        <result property="broadcastBeginTime" column="BROADCAST_BEGINTIME" jdbcType="TIMESTAMP"/>
+        <result property="broadcastEndTime" column="BROADCAST_ENDTIME" jdbcType="TIMESTAMP"/>
+        <result property="broadcastNickname" column="BROADCAST_NICKNAME" jdbcType="VARCHAR"/>
+        <result property="broadcastId" column="BROADCAST_ID" jdbcType="VARCHAR"/>
+        <result property="broadcastNums" column="BROADCAST_NUMS" jdbcType="VARCHAR"/>
+        <result property="broadcastCount" column="BROADCAST_COUNT" jdbcType="VARCHAR"/>
+        <result property="estimateSales" column="ESTIMATE_SALES" jdbcType="VARCHAR"/>
+        <result property="commission" column="COMMISSION" jdbcType="VARCHAR"/>
+        <result property="mcnOrg" column="MCN_ORG" jdbcType="VARCHAR"/>
+        <result property="orderPlatform" column="ORDER_PLATFORM" jdbcType="VARCHAR"/>
+        <result property="broadcastShopName" column="BROADCAST_SHOPNAME" jdbcType="VARCHAR"/>
+        <result property="broadcastShopId" column="BROADCAST_SHOPID" jdbcType="VARCHAR"/>
+        <result property="projectLeader" column="PROJECT_LEADER" jdbcType="VARCHAR"/>
+        <result property="projectOperation" column="PROJECT_OPERATION" jdbcType="VARCHAR"/>
+        <result property="projectGoods" column="PROJECT_GOODS" jdbcType="VARCHAR"/>
+        <result property="projectPrice" column="PROJECT_PRICE" jdbcType="VARCHAR"/>
+        <result property="projectHead" column="PROJECT_HEAD" jdbcType="VARCHAR"/>
+        <result property="salesGross" column="SALES_GROSS" jdbcType="VARCHAR"/>
+        <result property="salesNet" column="SALES_NET" jdbcType="VARCHAR"/>
+        <result property="returnRate" column="RETURN_RATE" jdbcType="VARCHAR"/>
+        <result property="score" column="SCORE" jdbcType="VARCHAR"/>
+        <result property="createDate" column="CREATE_DATE" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="UPDATE_DATE" jdbcType="TIMESTAMP"/>
+        <result property="changePrice" column="CHANGE_PRICE" jdbcType="VARCHAR"/>
+        <result property="note1" column="NOTE1" jdbcType="VARCHAR"/>
+        <result property="note2" column="NOTE2" jdbcType="VARCHAR"/>
+        <result property="note3" column="NOTE3" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--数据保存-->
+    <insert id="save" parameterType="java.util.Map">
+        INSERT INTO BROADCAST
+        (ID, PROGRESS, REGION, COMPANY, BROADCAST_PLATFORM, BROADCAST_ONLINESHOP, BROADCAST_DATE, BROADCAST_BEGINTIME,
+         BROADCAST_ENDTIME, BROADCAST_NICKNAME, BROADCAST_ID, BROADCAST_NUMS, BROADCAST_COUNT, ESTIMATE_SALES,
+         COMMISSION, MCN_ORG, ORDER_PLATFORM, BROADCAST_SHOPNAME, BROADCAST_SHOPID, PROJECT_LEADER, PROJECT_OPERATION,
+         PROJECT_GOODS, PROJECT_PRICE, PROJECT_HEAD, SALES_GROSS, SALES_NET, RETURN_RATE, SCORE, CREATE_DATE,
+         UPDATE_DATE, CHANGE_PRICE, NOTE1, NOTE2, NOTE3)
+        VALUES (#{id,jdbcType=VARCHAR},
+                #{progress,jdbcType=VARCHAR},
+                #{region,jdbcType=VARCHAR},
+                #{company,jdbcType=VARCHAR},
+                #{broadcastPlatform,jdbcType=VARCHAR},
+                #{broadcastOnlineshop,jdbcType=VARCHAR},
+                #{broadcastDate,jdbcType=TIMESTAMP},
+                #{broadcastBeginTime,jdbcType=TIMESTAMP},
+                #{broadcastEndTime,jdbcType=TIMESTAMP},
+                #{broadcastNickname,jdbcType=VARCHAR},
+                #{broadcastId,jdbcType=VARCHAR},
+                #{broadcastNums,jdbcType=VARCHAR},
+                #{broadcastCount,jdbcType=VARCHAR},
+                #{estimateSales,jdbcType=VARCHAR},
+                #{commission,jdbcType=VARCHAR},
+                #{mcnOrg,jdbcType=VARCHAR},
+                #{orderPlatform,jdbcType=VARCHAR},
+                #{broadcastShopName,jdbcType=VARCHAR},
+                #{broadcastShopId,jdbcType=VARCHAR},
+                #{projectLeader,jdbcType=VARCHAR},
+                #{projectOperation,jdbcType=VARCHAR},
+                #{projectGoods,jdbcType=VARCHAR},
+                #{projectPrice,jdbcType=VARCHAR},
+                #{projectHead,jdbcType=VARCHAR},
+                #{salesGross,jdbcType=VARCHAR},
+                #{salesNet,jdbcType=VARCHAR},
+                #{returnRate,jdbcType=VARCHAR},
+                #{score,jdbcType=VARCHAR},
+                #{createDate,jdbcType=TIMESTAMP},
+                #{updateDate,jdbcType=TIMESTAMP},
+                #{changePrice,jdbcType=VARCHAR},
+                #{note1,jdbcType=VARCHAR},
+                #{note2,jdbcType=VARCHAR},
+                #{note3,jdbcType=VARCHAR})
+    </insert>
+
+    <!--更新数据-->
+    <update id="update" parameterType="com.mb.broadcast.entity.BroadcastEntity">
+        UPDATE BROADCAST
+        <set>
+            <if test="progress!=null and progress!='' ">
+                PROGRESS = #{progress,jdbcType=VARCHAR},
+            </if>
+            <if test="region!=null and region!='' ">
+                REGION = #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="company!=null and company!='' ">
+                COMPANY = #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastPlatform!=null and broadcastPlatform!='' ">
+                BROADCAST_PLATFORM = #{broadcastPlatform,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastOnlineshop!=null and broadcastOnlineshop!='' ">
+                BROADCAST_ONLINESHOP = #{broadcastOnlineshop,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastDate!=null">
+                BROADCAST_DATE = #{broadcastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="broadcastBeginTime!=null">
+                BROADCAST_BEGINTIME = #{broadcastBeginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="broadcastEndTime!=null">
+                BROADCAST_ENDTIME = #{broadcastEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="broadcastNickname!=null and broadcastNickname!='' ">
+                BROADCAST_NICKNAME = #{broadcastNickname,jdbcType=INTEGER},
+            </if>
+            <if test="broadcastId!=null and broadcastId!='' ">
+                BROADCAST_ID = #{broadcastId,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastNums!=null and broadcastNums!='' ">
+                BROADCAST_NUMS = #{broadcastNums,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastCount!=null and broadcastCount!='' ">
+                BROADCAST_COUNT = #{broadcastCount,jdbcType=VARCHAR},
+            </if>
+            <if test="estimateSales!=null and estimateSales!='' ">
+                ESTIMATE_SALES = #{estimateSales,jdbcType=VARCHAR},
+            </if>
+            <if test="commission!=null and commission!='' ">
+                COMMISSION = #{commission,jdbcType=VARCHAR},
+            </if>
+            <if test="mcnOrg!=null and mcnOrg!='' ">
+                MCN_ORG = #{mcnOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="orderPlatform!=null and orderPlatform!='' ">
+                ORDER_PLATFORM = #{orderPlatform,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastShopName!=null and broadcastShopName!='' ">
+                BROADCAST_SHOPNAME = #{broadcastShopName,jdbcType=VARCHAR},
+            </if>
+            <if test="broadcastShopId!=null and broadcastShopId!='' ">
+                BROADCAST_SHOPID = #{broadcastShopId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectLeader!=null and projectLeader!='' ">
+                PROJECT_LEADER = #{projectLeader,jdbcType=VARCHAR},
+            </if>
+            <if test="projectOperation!=null and projectOperation!='' ">
+                PROJECT_OPERATION = #{projectOperation,jdbcType=VARCHAR},
+            </if>
+            <if test="projectGoods!=null and projectGoods!='' ">
+                PROJECT_GOODS = #{projectGoods,jdbcType=VARCHAR},
+            </if>
+            <if test="projectPrice!=null and projectPrice!='' ">
+                PROJECT_PRICE = #{projectPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="projectHead!=null and projectHead!='' ">
+                PROJECT_HEAD = #{projectHead,jdbcType=VARCHAR},
+            </if>
+            <if test="salesGross!=null and salesGross!='' ">
+                SALES_GROSS = #{salesGross,jdbcType=VARCHAR},
+            </if>
+            <if test="salesNet!=null and salesNet!='' ">
+                SALES_NET = #{salesNet,jdbcType=VARCHAR},
+            </if>
+            <if test="returnRate!=null and returnRate!='' ">
+                RETURN_RATE = #{returnRate,jdbcType=VARCHAR},
+            </if>
+            <if test="score!=null and score!='' ">
+                SCORE = #{score,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate!=null">
+                UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changePrice!=null and changePrice!='' ">
+                CHANGE_PRICE = #{changePrice,jdbcType=VARCHAR},
+            </if>
+            <if test="note1!=null and note1!='' ">
+                NOTE1 = #{note1,jdbcType=VARCHAR},
+            </if>
+            <if test="note2!=null and note2!='' ">
+                NOTE2 = #{note2,jdbcType=VARCHAR},
+            </if>
+            <if test="note3!=null and note3!='' ">
+                NOTE3 = #{note3,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询所有数据 -->
+    <select id="getListByParam" parameterType="Map" resultMap="resultMap">
+        SELECT *
+        FROM BROADCAST
+        WHERE 1=1
+        <if test="progressSearch != null and progressSearch != '' ">
+            AND progress=#{progressSearch }
+        </if>
+    </select>
+
+    <!-- 根据id删除数据 -->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE
+        FROM BROADCAST
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <!-- 根据id查询 -->
+    <select id="findById" parameterType="java.lang.String" resultMap="resultMap">
+        SELECT *
+        FROM BROADCAST
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

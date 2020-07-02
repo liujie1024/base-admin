@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.importbi.dao.CheckReportDao">
+
+	<resultMap id="resultMap" type="com.mb.importbi.entity.CheckReport">
+		<result property="mb_dist_name" column="MB_DIST_NAME" jdbcType="VARCHAR" />
+		<result property="manage_unit_name" column="MANAGE_UNIT_NAME" jdbcType="VARCHAR" />
+		<result property="import_count" column="IMPORT_COUNT" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- MB直营品牌，应该上传的分公司list -->
+	<select id="getMBList4Zy" parameterType="java.util.Map" resultMap="resultMap">
+		<![CDATA[ 
+			SELECT distinct mb_dist_name,manage_unit_name FROM MFP_SHOP_ALL 
+			WHERE shop_brand_name='MB' AND shop_class_name='直营'
+		 ]]>   
+	</select>
+	
+	<!-- MB合伙人品牌，应该上传的分公司list -->
+	<select id="getMBList4Hhr" parameterType="java.util.Map" resultMap="resultMap">
+		<![CDATA[ 
+			SELECT distinct mb_dist_name,manage_unit_name FROM MFP_SHOP_ALL 
+			WHERE shop_brand_name='MB' AND shop_class_name='合伙人'
+		]]> 
+	</select>
+	
+	<!-- MM品牌（不分直营和合伙人），应该上传的分公司list -->
+	<select id="getMMList4Hhr" parameterType="java.util.Map" resultMap="resultMap">
+		<![CDATA[ 
+			SELECT distinct mb_dist_name,manage_unit_name FROM MFP_SHOP_ALL 
+			WHERE shop_brand_name='MM'
+		]]> 
+	</select>
+	
+	<!-- 直营合伙人，数据导入的归类，每一类数据条数 -->
+	<select id="getCountByBrandAndClass" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT mb_dist_name, manage_unit_name, count(1) as import_count FROM 
+		(
+			SELECT t1.shop_id,t2.shop_brand_name,t2.shop_class_name,t2.mb_dist_name,t2.manage_unit_name FROM MFP_SHOP_SALE_UNSALABLE_SHOP t1 
+			LEFT JOIN MFP_SHOP_ALL t2 ON t1.shop_id = t2.shop_id
+			WHERE 1=1 
+			<if test="shop_brand_name != null and shop_brand_name != '' ">
+	        	AND t2.shop_brand_name=#{shop_brand_name } 
+	        </if>
+	        <if test="shop_class_name != null and shop_class_name != '' ">
+	        	AND t2.shop_class_name=#{shop_class_name } 
+	        </if>
+		) ta
+		GROUP BY mb_dist_name, manage_unit_name 
+	</select>
+	
+	<!-- 加盟，只要有数据就代表加盟已经导入 -->
+	<select id="getJmscCount" parameterType="java.util.Map" resultMap="resultMap">
+		select count(*) as import_count from MFP_SHOP_SALE_UNSALABLE_MRKT 
+	</select>
+	
+</mapper>

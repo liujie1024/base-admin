@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.baseType.dao.BaseTypeDao">
+
+    <resultMap id="resultMap" type="com.mb.baseType.entity.BaseType">
+        <id property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="typeCode" column="TYPE_CODE" jdbcType="VARCHAR"/>
+        <result property="typeName" column="TYPE_NAME" jdbcType="VARCHAR"/>
+        <result property="typeGroupId" column="TYPE_GROUPID" jdbcType="VARCHAR"/>
+        <result property="createDate" column="CREATE_DATE" jdbcType="TIMESTAMP"/>
+        <result property="createName" column="CREATE_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--数据保存-->
+    <insert id="save" parameterType="java.util.Map">
+        INSERT INTO BASE_TYPE
+            (ID, TYPE_CODE, TYPE_NAME, TYPE_GROUPID, CREATE_DATE, CREATE_NAME)
+        VALUES (#{id,jdbcType=VARCHAR},
+                #{typeCode,jdbcType=VARCHAR},
+                #{typeName,jdbcType=VARCHAR},
+                #{typeGroupId,jdbcType=VARCHAR},
+                #{createDate,jdbcType=TIMESTAMP},
+                #{createName,jdbcType=VARCHAR})
+    </insert>
+
+    <!--更新数据-->
+    <update id="update" parameterType="com.mb.baseType.entity.BaseType">
+        UPDATE BASE_TYPE
+        <set>
+            <if test="typeCode!=null and typeCode!='' ">
+                TYPE_CODE = #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="typeName!=null and typeName!='' ">
+                TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeGroupId!=null and typeGroupId!='' ">
+                TYPE_GROUPID = #{typeGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createName!=null and createName!='' ">
+                CREATE_NAME = #{createName,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询所有数据 -->
+    <select id="getListByParam" parameterType="Map" resultMap="resultMap">
+        SELECT *
+        FROM BASE_TYPE
+        WHERE 1=1
+        <if test="typeGroupId != null and typeGroupId != '' ">
+            AND TYPE_GROUPID=#{typeGroupId }
+        </if>
+    </select>
+
+    <!-- 根据id删除数据 -->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE
+        FROM BASE_TYPE
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <!-- 根据id删除数据 -->
+    <delete id="deleteByParam" parameterType="Map">
+        DELETE
+        FROM BASE_TYPE
+        WHERE TYPE_GROUPID = #{typeGroupId,jdbcType=VARCHAR}
+    </delete>
+
+    <!-- 根据id查询 -->
+    <select id="findById" parameterType="java.lang.String" resultMap="resultMap">
+        SELECT *
+        FROM BASE_TYPE
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

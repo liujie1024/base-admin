@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.importbi.dao.ImportBiDao">
+
+	<resultMap id="resultMap" type="com.mb.importbi.entity.ImportBi">
+		<result property="clndr_wk_cd" column="CLNDR_WK_CD" jdbcType="NUMERIC" />
+		<result property="shop_id" column="SHOP_ID" jdbcType="VARCHAR" />
+		<result property="item_cd_6bit" column="ITEM_CD_6BIT" jdbcType="VARCHAR" />
+		<result property="item_cd_8bit" column="ITEM_CD_8BIT" jdbcType="VARCHAR" />
+		<result property="is_sale_unsalable" column="IS_SALE_UNSALABLE" jdbcType="VARCHAR" />
+		<result property="load_dt" column="LOAD_DT" jdbcType="TIMESTAMP" />
+		<result property="target_unit_cnt" column="TARGET_UNIT_CNT" jdbcType="NUMERIC" />
+		<result property="target_unit_amt" column="TARGET_UNIT_AMT" jdbcType="NUMERIC" />
+		<result property="suggest_disc" column="SUGGEST_DISC" jdbcType="NUMERIC" />
+		<result property="sku_cnt" column="SKU_CNT" jdbcType="NUMERIC" />
+		<result property="plan_unit_cnt" column="PLAN_UNIT_CNT" jdbcType="NUMERIC" />
+		<result property="target_gm_amt" column="TARGET_GM_AMT" jdbcType="NUMERIC" />
+		<result property="rest_life" column="REST_LIFE" jdbcType="NUMERIC" />
+		<result property="mb_dist_name" column="MB_DIST_NAME" jdbcType="VARCHAR" />
+		<result property="manage_unit_name" column="MANAGE_UNIT_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 直营合伙人，批量插入数据 oracle写法 -->
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO MFP_SHOP_SALE_UNSALABLE_SHOP (CLNDR_WK_CD, SHOP_ID, ITEM_CD_6BIT, ITEM_CD_8BIT, 
+			  	IS_SALE_UNSALABLE, TARGET_UNIT_CNT, SUGGEST_DISC, 
+			  	REST_LIFE, MB_DIST_NAME, MANAGE_UNIT_NAME) 
+		(
+		<foreach collection="importBiList" index="" item="importBi" separator="union all">
+			select
+			   #{importBi.clndr_wk_cd,jdbcType=NUMERIC },#{importBi.shop_id,jdbcType=VARCHAR },
+			   #{importBi.item_cd_6bit,jdbcType=VARCHAR },#{importBi.item_cd_8bit,jdbcType=VARCHAR },
+			   #{importBi.is_sale_unsalable,jdbcType=VARCHAR },#{importBi.target_unit_cnt,jdbcType=NUMERIC },
+			   #{importBi.suggest_disc,jdbcType=NUMERIC },#{importBi.rest_life,jdbcType=NUMERIC },
+			   (SELECT MB_DIST_NAME FROM MFP_SHOP_ALL WHERE SHOP_ID=#{importBi.shop_id,jdbcType=VARCHAR } and rownum=1),
+			   (SELECT MANAGE_UNIT_NAME FROM MFP_SHOP_ALL WHERE SHOP_ID=#{importBi.shop_id,jdbcType=VARCHAR } and rownum=1)
+			from dual
+		</foreach>
+		)
+	</insert>
+
+	<!-- 通过主键集合批量删除记录 -->
+	<delete id="deleteByMap" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_SHOP WHERE SHOP_ID=#{shop_id } AND ITEM_CD_8BIT=#{item_cd_8bit } AND IS_SALE_UNSALABLE=#{is_sale_unsalable }
+	</delete>
+	
+	<!-- 批量删除记录 -->
+	<delete id="deleteBatchByMap2" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_SHOP A
+		WHERE EXISTS
+		(
+		select 1 from(
+		<foreach collection="deleteBatchList" item="importBi" index="index" separator="union all">
+			select B.* from MFP_SHOP_SALE_UNSALABLE_SHOP B where 1=1 
+			AND B.SHOP_ID=#{importBi.shop_id } 
+			AND B.ITEM_CD_8BIT=#{importBi.item_cd_8bit } 
+			AND B.IS_SALE_UNSALABLE=#{importBi.is_sale_unsalable }
+		</foreach>
+		) S 
+		where A.SHOP_ID=S.SHOP_ID and A.ITEM_CD_8BIT=S.ITEM_CD_8BIT and A.IS_SALE_UNSALABLE=S.IS_SALE_UNSALABLE
+		)
+	</delete>
+	
+	<!-- 批量删除记录 -->
+	<delete id="deleteBatchByMap" parameterType="java.util.Map">
+		DELETE FROM MFP_SHOP_SALE_UNSALABLE_SHOP 
+		<where>
+			<foreach collection="deleteBatchList" index="index" item="importBi" open="(" separator="or" close=")">
+				SHOP_ID=#{importBi.shop_id } 
+				AND ITEM_CD_8BIT=#{importBi.item_cd_8bit } 
+				AND IS_SALE_UNSALABLE=#{importBi.is_sale_unsalable }
+			</foreach>
+		</where>
+	</delete>
+	
+	<!-- 根据参数查询数据 -->
+	<select id="getListByParam" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT * FROM MFP_SHOP_SALE_UNSALABLE_SHOP 
+		<include refid="base_select_where" />
+	</select>
+	
+	<sql id="base_select_where">
+		<where>
+	        <if test="shop_id != null and shop_id != '' ">
+	          and SHOP_ID = #{shop_id }
+	        </if>
+	        <if test="item_cd_8bit != null and item_cd_8bit != '' ">
+	          and ITEM_CD_8BIT = #{item_cd_8bit }
+	        </if>
+	        <if test="is_sale_unsalable != null and is_sale_unsalable != '' ">
+	          and IS_SALE_UNSALABLE = #{is_sale_unsalable }
+	        </if>
+		</where>
+	</sql>
+	
+</mapper>

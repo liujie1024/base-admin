@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mb.test.dao.ConfigureDao">
+	<resultMap id="baseResultMap" type="com.mb.test.entity.Configure">
+		<id property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="configLevel" column="CONFIGLEVEL" jdbcType="VARCHAR" />
+		<result property="companyId" column="COMPANYID" jdbcType="VARCHAR" />
+		<result property="companyName" column="COMPANYNAME" jdbcType="VARCHAR" />
+		<result property="storeId" column="STOREID" jdbcType="VARCHAR" />
+		<result property="storeName" column="STORENAME" jdbcType="VARCHAR" />
+		<result property="staffLevel" column="STAFFLEVEL" jdbcType="VARCHAR" />
+		<result property="goldideaProType" column="GOLDIDEAPROTYPE" jdbcType="VARCHAR" />
+		<result property="complainProType" column="COMPLAINPROTYPE" jdbcType="VARCHAR" />
+		<result property="createUser" column="CREATEUSER" jdbcType="VARCHAR" />
+		<result property="createTime" column="CREATETIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATETIME" jdbcType="TIMESTAMP" />
+		<result property="userId" column="USERID" jdbcType="VARCHAR" />
+		<result property="extend1" column="EXTEND1" jdbcType="VARCHAR" />
+		<result property="extend2" column="EXTEND2" jdbcType="VARCHAR" />
+		<result property="extend3" column="EXTEND3" jdbcType="VARCHAR" />
+		<result property="brand" column="BRAND" jdbcType="VARCHAR" />
+		<result property="storeType" column="STORETYPE" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO wx_configure 
+			(id, configLevel, companyId, companyName, storeId, storeName, staffLevel, goldideaProType, 
+			complainProType, createUser, createtime, updatetime, userId, extend1, extend2, extend3, brand, storeType) 
+		VALUES 
+			(#{id,jdbcType=VARCHAR}, 
+			#{configLevel,jdbcType=VARCHAR},
+			#{companyId,jdbcType=VARCHAR},
+			#{companyName,jdbcType=VARCHAR}, 
+			#{storeId,jdbcType=VARCHAR}, 
+			#{storeName,jdbcType=VARCHAR}, 
+			#{staffLevel,jdbcType=VARCHAR}, 
+			#{goldideaProType,jdbcType=VARCHAR}, 
+			#{complainProType,jdbcType=VARCHAR}, 
+			#{createUser,jdbcType=VARCHAR}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{updateTime,jdbcType=TIMESTAMP}, 
+			#{userId,jdbcType=VARCHAR}, 
+			#{extend1,jdbcType=VARCHAR}, 
+			#{extend2,jdbcType=VARCHAR}, 
+			#{extend3,jdbcType=VARCHAR}, 
+			#{brand,jdbcType=VARCHAR}, 
+			#{storeType,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--批量新增投诉配置 -->
+	<insert id="insertBatch"  parameterType="java.util.Map">
+		INSERT INTO wx_configure 
+			(id, configLevel, companyId, companyName, storeId, storeName, staffLevel, goldideaProType, 
+			complainProType, createUser, createtime, updatetime, userId, extend1, extend2, extend3, brand, storeType) 
+		VALUES 
+		<foreach collection="configureList" item="item" index="index" separator="," >  
+        	(#{item.id,jdbcType=VARCHAR},
+        	 #{item.configLevel,jdbcType=VARCHAR},
+        	 #{item.companyId,jdbcType=VARCHAR},
+        	 #{item.companyName,jdbcType=VARCHAR},
+        	 #{item.storeId,jdbcType=VARCHAR},
+        	 #{item.storeName,jdbcType=VARCHAR},
+        	 #{item.staffLevel,jdbcType=VARCHAR},
+        	 #{item.goldideaProType,jdbcType=VARCHAR},
+        	 #{item.complainProType,jdbcType=VARCHAR},
+        	 #{item.createUser,jdbcType=VARCHAR},
+        	 #{item.createTime,jdbcType=TIMESTAMP},
+        	 #{item.updateTime,jdbcType=TIMESTAMP},
+        	 #{item.userId,jdbcType=VARCHAR},
+        	 #{item.extend1,jdbcType=VARCHAR},
+        	 #{item.extend2,jdbcType=VARCHAR},
+        	 #{item.extend3,jdbcType=VARCHAR},
+        	 #{item.brand,jdbcType=VARCHAR},
+        	 #{item.storeType,jdbcType=VARCHAR})  
+        </foreach> 
+        
+	</insert>
+
+	
+
+	<!-- 分页查询 -->
+	<select id="selectByParamListPage" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT * FROM wx_configure 
+		<include refid="Base_select_where" /> 
+		order by createTime desc
+	</select>
+	
+	<!-- 查询总数 -->
+	<select id="getCountByParam" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM wx_configure 
+		<include refid="Base_select_where" />
+	</select>
+	
+	<!-- 根据id删除数据 -->
+	<delete  id="deleteByPrimaryKey"  parameterType="java.lang.String">
+	   delete from wx_configure where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectByPrimaryKey" resultMap="baseResultMap" parameterType="java.lang.String" >
+		select * from wx_configure where id = #{id,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="Base_select_where" >
+		<where>
+		    <if test="id != null and id!=''" >
+		         and id = #{id}
+			</if>
+			<if test="configLevel != null and configLevel!=''" >
+		         and configLevel = #{configLevel}
+			</if>
+			<if test="companyId != null and companyId!=''" >
+		         and companyId = #{companyId}
+			</if>
+			<if test="companyName != null and companyName!=''" >
+		         and companyName = #{companyName}
+			</if>
+			<if test="storeId != null and storeId!=''" >
+		         and storeId = #{storeId}
+			</if>
+			<if test="storeName != null and storeName!=''" >
+		         and storeName = #{storeName}
+			</if>
+			<if test="staffLevel != null and staffLevel!=''" >
+		         and staffLevel = #{staffLevel}
+			</if>
+			<if test="goldideaProType != null and goldideaProType!=''" >
+		         and goldideaProType = #{goldideaProType}
+			</if>
+			<if test="complainProType != null and complainProType!=''" >
+		         and complainProType = #{complainProType}
+			</if>
+			<if test="createUser != null and createUser!=''" >
+		         and createUser = #{createUser}
+			</if>
+			<if test="createTime != null and createTime!=''" >
+		         and createTime = #{createTime}
+			</if>
+			<if test="updateTime != null and updateTime!=''" >
+		         and updateTime = #{updateTime}
+			</if>
+			<if test="userId != null and userId!=''" >
+		         and userId like CONCAT('%',TRIM(#{userId}),'%')
+			</if>
+			<if test="extend1 != null and extend1!=''" >
+		         and extend1 = #{extend1}
+			</if>
+			<if test="extend2 != null and extend2!=''" >
+		         and extend2 = #{extend2}
+			</if>
+			<if test="extend3 != null and extend3!=''" >
+		         and extend3 = #{extend3}
+			</if>
+			<if test="brand != null and brand!=''" >
+		         and brand = #{brand}
+			</if>
+			<if test="storeType != null and storeType!=''" >
+		         and storeType = #{storeType}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 根据userId查询数据 -->
+	<select id="selectListByUserId" resultMap="baseResultMap" parameterType="java.util.Map">
+		SELECT * FROM wx_configure where userId = #{userId} 
+	</select>
+	
+</mapper>

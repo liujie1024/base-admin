@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.login.dao.UserDao">
+
+	<resultMap id="resultMap" type="com.mb.login.entity.User">
+		<id property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="username" column="USERNAME" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
+		<result property="state" column="STATE" jdbcType="INTEGER" />
+		<result property="createTime" column="CREATETIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATETIME" jdbcType="TIMESTAMP" />
+		<result property="createUser" column="CREATEUSER" jdbcType="VARCHAR" />
+		<collection property="roleList" column="id" javaType="ArrayList" 
+			ofType="com.mb.role.entity.Role" select="com.mb.role.dao.RoleDao.selectRoleListByUserId" />
+	</resultMap>
+	
+	<insert id="save" parameterType="java.util.Map">
+		INSERT INTO base_user 
+			(id, username, password, state, createTime, updateTime, createUser) 
+		VALUES 
+			(#{id,jdbcType=VARCHAR}, 
+			#{username,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{state,jdbcType=INTEGER}, 
+			#{createTime,jdbcType=TIMESTAMP}, 
+			#{updateTime,jdbcType=TIMESTAMP}, 
+			#{createUser,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 批量插入用户角色对应关系 -->
+	<!-- mysql -->
+	<!-- <insert id="insertUserRole" parameterType="java.util.Map">
+		insert into base_user_role(id, userId, roleId) values 
+		<foreach collection="userRoleList" item="userRole" separator=",">
+			(#{userRole.id },#{userRole.userId },#{userRole.roleId })
+		</foreach>
+	</insert> -->
+	<!-- oracle -->
+	<insert id="insertUserRole" parameterType="java.util.Map">
+		insert into base_user_role(id, userId, roleId) 
+		(
+		<foreach collection="userRoleList" index="" item="userRole" separator="union all">
+			select
+			#{userRole.id },#{userRole.userId },#{userRole.roleId }
+			from dual
+		</foreach>
+		)
+	</insert>
+	
+	<!-- 根据用户userId删除用户角色对应关系 -->
+	<delete id="deleteUserRoleByUserId"  parameterType="java.lang.String">
+	   delete from base_user_role where userId = #{userId} 
+	</delete>
+	
+	<update id="update" parameterType="com.mb.login.entity.User">
+	    UPDATE base_user
+	    <set>
+	    	<if test="username!=null and username!='' ">
+	            username = #{username,jdbcType=VARCHAR},
+	        </if>
+	        <if test="password!=null and password!='' ">
+	            password = #{password,jdbcType=VARCHAR},
+	        </if>
+	        <if test="state!=null and state!='' ">
+	            state = #{state,jdbcType=INTEGER},
+	        </if>
+	        <if test="createTime!=null">
+	            createTime = #{createTime,jdbcType=TIMESTAMP},
+	        </if>
+	        <if test="updateTime!=null">
+	            updateTime = #{updateTime,jdbcType=TIMESTAMP},
+	        </if>
+	        <if test="createUser!=null and createUser!='' ">
+	            createUser = #{createUser,jdbcType=VARCHAR}
+	        </if>
+	    </set>
+	    WHERE id = #{id,jdbcType=VARCHAR} 
+	</update>
+	
+	<!-- 根据id删除数据 -->
+	<delete id="deleteById"  parameterType="java.lang.String">
+	   delete from base_user where id = #{id,jdbcType=VARCHAR} 
+	</delete>
+
+	<!-- 根据id查询用户 -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.mb.login.entity.User">
+		select 
+		<include refid="base_column_list" /> 
+		from base_user where id=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据参数查询用户 -->
+	<select id="getListByParam" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT 
+		<include refid="base_column_list" />
+		FROM base_user 
+		<include refid="base_select_where" />
+	</select>
+	
+	<!-- 根据用户名查询用户 -->
+	<select id="getUserByName" parameterType="java.lang.String" resultType="com.mb.login.entity.User">
+		select 
+		<include refid="base_column_list" /> 
+		from base_user where username=#{username }
+	</select>
+	
+	<sql id="base_column_list" >
+       	 id, 
+       	 username, 
+       	 password, 
+       	 state,
+       	 createTime,
+       	 updateTime,
+       	 createUser
+ 	 </sql>
+ 	 
+ 	 <sql id="base_select_where" >
+		<where>
+			<if test="id != null and id != '' ">
+	          and ID = #{id,jdbcType=VARCHAR}
+	        </if>
+		    <if test="username != null and username != '' ">
+	          and USERNAME = #{username,jdbcType=VARCHAR}
+	        </if>
+	        <if test="password != null and password != '' ">
+	          and PASSWORD = #{password,jdbcType=VARCHAR}
+	        </if>
+	        <if test="state != null and state != '' ">
+	          and STATE = #{state,jdbcType=INTEGER}
+	        </if>
+	        <if test="createTime != null and createTime != '' ">
+	          and CREATETIME = #{createTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="updateTime != null and updateTime != '' ">
+	          and UPDATETIME = #{updateTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="createUser != null and createUser != '' ">
+	          and CREATEUSER = #{createUser,jdbcType=VARCHAR}
+	        </if>
+	        <if test="usernameSearch != null and usernameSearch != '' ">
+	          and username LIKE '%' || #{usernameSearch} || '%'
+	        </if>
+		</where>
+	</sql>
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.baseType.dao.BaseTypeGroupDao">
+
+    <resultMap id="resultMap" type="com.mb.baseType.entity.BaseTypeGroup">
+        <id property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="typeGroupCode" column="TYPEGROUP_CODE" jdbcType="VARCHAR"/>
+        <result property="typeGroupName" column="TYPEGROUP_NAME" jdbcType="VARCHAR"/>
+        <result property="createDate" column="CREATE_DATE" jdbcType="TIMESTAMP"/>
+        <result property="createName" column="CREATE_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--数据保存-->
+    <insert id="save" parameterType="java.util.Map">
+        INSERT INTO BASE_TYPEGROUP
+            (ID, TYPEGROUP_CODE, TYPEGROUP_NAME, CREATE_DATE, CREATE_NAME)
+        VALUES (#{id,jdbcType=VARCHAR},
+                #{typeGroupCode,jdbcType=VARCHAR},
+                #{typeGroupName,jdbcType=VARCHAR},
+                #{createDate,jdbcType=TIMESTAMP},
+                #{createName,jdbcType=VARCHAR})
+    </insert>
+
+    <!--更新数据-->
+    <update id="update" parameterType="com.mb.baseType.entity.BaseTypeGroup">
+        UPDATE BASE_TYPEGROUP
+        <set>
+            <if test="typeGroupCode!=null and typeGroupCode!='' ">
+                TYPEGROUP_CODE = #{typeGroupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="typeGroupName!=null and typeGroupName!='' ">
+                TYPEGROUP_NAME = #{typeGroupName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createName!=null and createName!='' ">
+                CREATE_NAME = #{createName,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询所有数据 -->
+    <select id="getListByParam" parameterType="Map" resultMap="resultMap">
+        SELECT *
+        FROM BASE_TYPEGROUP
+        WHERE 1=1
+        <if test="typeGroupCode != null and typeGroupCode != '' ">
+            AND TYPEGROUP_CODE=#{typeGroupCode }
+        </if>
+        <if test="typeGroupName != null and typeGroupName != '' ">
+            AND TYPEGROUP_NAME=#{typeGroupName }
+        </if>
+        ORDER BY CREATE_DATE DESC
+    </select>
+
+    <!-- 根据id删除数据 -->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE
+        FROM BASE_TYPEGROUP
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <!-- 根据id查询 -->
+    <select id="findById" parameterType="java.lang.String" resultMap="resultMap">
+        SELECT *
+        FROM BASE_TYPEGROUP
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

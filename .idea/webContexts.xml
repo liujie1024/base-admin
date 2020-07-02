@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebContextManager">
+    <option name="state">
+      <map>
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType/addBaseTypeGroup.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType/bastTypeList.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType/updateBaseTypeGroup.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/baseType" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast/addBroadcast.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast/broadcastList.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast/updateBroadcast.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/broadcast" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/common/common.jsp" value="file://$PROJECT_DIR$/src/main/webapp/common" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+      </map>
+    </option>
+  </component>
+</project>
